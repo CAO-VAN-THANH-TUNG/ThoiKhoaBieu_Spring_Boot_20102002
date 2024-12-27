@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+  <title>Hệ Thống Quản Lý Thời Khóa Biểu</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="pics/banger.png" type="image/gif" sizes="16x16"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+        <link href="css/LogInCss.css" rel="stylesheet" type="text/css"/>
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+	
+</head>
+<body>
+
+	<img src="pics/banner.PNG"  width="100%" >
+              
+        <div class="top-container">
+            <div class="topnav">
+              	<a class="active"  th:href = "@{/gotomakeTimetableRow}">Tạo Lịch</a>    
+               <a th:href = "@{/timetableEdit}">Quản Lý Thời Khóa Biểu</a> 
+               <a th:href = "@{/goaddTeacher}">Quản Lý Giảng Viên</a> 
+               <a th:href = "@{/editRooms}">Quản Lý Phòng</a>  
+               <a th:href = "@{/editCourses}">Đặt Phòng</a>
+            
+                 <div class="logged topnav-right">
+				<h3 id="username" style="color:white;"></h3>
+
+			</div>
+            </div>  
+          
+            <div class="limiter" >
+		<div class="container-login100" >
+	<div class="container my-2">
+	<h1>Yêu Cầu Phòng Từ Giảng Viên</h1>
+	
+	<a th:href = "@{/gotomakeTimetableRow}" class="btn btn-primary btn-sm mb-3"> Thêm Phòng </a>
+	
+		<table border="1" class = "table table-striped table-responsive-md">
+			<thead>
+				<tr>
+					<th>
+					<a th:href="@{'/timetablerPhongHocpage/' + ${currentPage} + '?sortField=number&sortDir=' + ${reverseSortDir}}">
+							Số Phòng</a>
+					</th>
+					<th>
+					<a th:href="@{'/timetablerPhongHocpage/' + ${currentPage} + '?sortField=floor&sortDir=' + ${reverseSortDir}}">
+							Tầng</a>
+					</th>
+					<th>
+					<a th:href="@{'/timetablerPhongHocpage/' + ${currentPage} + '?sortField=status&sortDir=' + ${reverseSortDir}}">
+							Trạng Thái</a>
+					</th>
+					<th>
+					<a th:href="@{'/timetablerPhongHocpage/' + ${currentPage} + '?sortField=bookedTeacher&sortDir=' + ${reverseSortDir}}">
+							Giảng Viên Đặt</a>
+					</th>
+					<th>
+					<a th:href="@{'/timetablerPhongHocpage/' + ${currentPage} + '?sortField=maxCapacity&sortDir=' + ${reverseSortDir}}">
+							Sức Chứa Tối Đa</a>
+					</th>
+					<th>
+					<a th:href="@{'/timetablerPhongHocpage/' + ${currentPage} + '?sortField=minCapacity&sortDir=' + ${reverseSortDir}}">
+							Sức Chứa Tối Thiểu</a>
+					</th>
+					<th>
+					<a th:href="@{'/timetablerPhongHocpage/' + ${currentPage} + '?sortField=availability&sortDir=' + ${reverseSortDir}}">
+							Tình Trạng Sẵn Sàng</a>
+					</th>
+				
+					<th> Hành Động </th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="phongHoc : ${listPhongHoc}">
+					<td th:text="${phongHoc.soPhong}"></td>
+					<td th:text="${phongHoc.tang}"></td>
+					<td th:text="${phongHoc.trangThai}"></td>
+					<td th:text="${phongHoc.giangVienDat}"></td>
+					<td th:text="${phongHoc.sucChuaToiDa}"></td>
+					<td th:text="${phongHoc.sucChuaToiThieu}"></td>
+					<td th:text="${phongHoc.tinhTrangSanSang}"></td>
+					<td> <a th:href="@{/RoomReservationConfirm/{id}(id=${phongHoc.id})}" class="btn btn-primary">Xác Nhận Đặt Phòng</a>
+					    <a th:href="@{/cancelRoomReservation/{id}(id=${phongHoc.id})}" class="btn btn-danger">Hủy Đặt Phòng</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<div th:if = "${totalPages > 1}">
+			<div class = "row col-sm-10">
+				<div class = "col-sm-2">
+					Tổng Số Dòng: [[${totalItems}]] 
+				</div>
+				<div class = "col-sm-1">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+						<a th:if="${currentPage != i}" th:href="@{'/pagetimetablerroom/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+						<span th:unless="${currentPage != i}">[[${i}]]</span>  
+					</span>
+				</div>
+				<div class = "col-sm-1">
+					<a th:if="${currentPage < totalPages}" th:href="@{'/pagetimetablerroom/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Tiếp Theo</a>
+					<span th:unless="${currentPage < totalPages}">Tiếp Theo</span>
+				</div>
+				
+				 <div class="col-sm-1">
+    				<a th:if="${currentPage < totalPages}" th:href="@{'/pagetimetablerroom/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Cuối Cùng</a>
+					<span th:unless="${currentPage < totalPages}">Cuối Cùng</span>
+   				 </div>
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
+            
+            <div class="outbox">
+            <footer class="footer-distributed">
+
+			<div class="footer-left">
+
+				<p class="footer-links">
+					<a href="TrangChu">Trang Chủ</a>		
+                    <a href="showAboutPage">Giới Thiệu</a>
+					<a href="contactUs">Liên Hệ</a>
+				</p>
+
+				<p class="footer-company-name">Hệ Thống Quản Lý Thời Khóa Biểu  2020</p>
+
+			</div>
+
+			<div class="footer-right">
+
+				<form method="get" action="#">
+					<input placeholder="Tìm kiếm trên trang web" name="search" />
+					<i class="fa fa-search"></i>
+                                          </form>
+
+			</div>
+
+            </footer>
+            </div>
+</body>
+</html>
